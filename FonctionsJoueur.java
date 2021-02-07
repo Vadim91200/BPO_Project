@@ -36,30 +36,42 @@ public class FonctionsJoueur {
     }
 
     public static boolean jouer(boolean b, Joueur j1, Joueur j2) {
-        if (b = true) {
-            if (fini(b, j1, j2)) {
+        if (fini(b, j1, j2)) {
+            if (b = true) {
                  System.out.println("partie finie, SUD a gagne");
                  return b;
             } else {
-                System.out.print("> ");
-                Scanner sc = new Scanner(System.in);
-                String m = sc.next();
-                j1.main.remove(0);
-
-            }
-        } else {
-            if (fini(b, j1, j2)) {
                 System.out.println("partie finie, NORD a gagne");
                 return b;
-            } else {
-                System.out.print("> ");
-                Scanner sc = new Scanner(System.in);
-                String m = sc.next();
-                j2.main.remove(0);
+            }
+        } else {
+            System.out.print("> ");
+            Scanner sc = new Scanner(System.in);
+            String s = sc.nextLine();
+            System.out.println(s);
+            Scanner k = new Scanner(s);
+            while(k.hasNext()) {
+                String x = k.next();
+                if(EstValide(x)){
+
+                }
 
             }
+            j1.main.remove(0);
         }
         return b = !b;
     }
+    public static boolean EstValide(String s) {
+        boolean b =true;
+        return b;
+    }
+    public static void Ajouter(String s) {
+        if (s.contains("'")){
 
+        }else if (s.contains("^")){
+
+        }else if (s.contains("v")){
+
+        }
+    }
 }
