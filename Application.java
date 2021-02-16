@@ -3,19 +3,19 @@ package appli;
 import java.util.Random;
 
 public class Application {
-    public static void Afficher(Joueur NORD, Joueur SUD, boolean TOUR) {
-        System.out.println("NORD ^"+NORD.ascendant +" v" +NORD.descendant+ " (m"+NORD.main.size()+"p"+NORD.Pioche+")");
-        System.out.println("SUD ^"+SUD.ascendant +" v" +SUD.descendant+ " (m"+SUD.main.size()+"p"+SUD.Pioche+")");
-        if(TOUR == true){
+    public static void Afficher(Joueur NORD, Joueur SUD) {
+        System.out.println("NORD ^["+String.format("%02d", NORD.getAscendant()) +"] v[" +NORD.getDescendant()+ "] (m"+NORD.getMain().size()+"p"+NORD.getPcarte().getElement().size()+")");
+        System.out.println("SUD ^["+String.format("%02d", SUD.getAscendant()) +"] v[" +SUD.getDescendant()+ "] (m"+SUD.getMain().size()+"p"+SUD.getPcarte().getElement().size()+")");
+        if(NORD.getTour()%2==0){
             System.out.print("cartes NORD { ");
-            for(int i : NORD.main){
-                System.out.print(i+" ");
+            for(int i : NORD.getMain()){
+                System.out.print(String.format("%02d", i)+" ");
             }
             System.out.println("}");
         }else{
             System.out.print("cartes SUD { ");
-            for(int i : SUD.main){
-                System.out.print(i+" ");
+            for(int i : SUD.getMain()){
+                System.out.print(String.format("%02d", i)+" ");
             }
             System.out.println("}");
         }
@@ -24,14 +24,14 @@ public class Application {
     public static void main(String[] args){
         Joueur NORD = new Joueur();
         Joueur SUD = new Joueur();
-        boolean TOUR= true, fini = false;
-        FonctionsJoueur.Initialiser(NORD);
-        FonctionsJoueur.Initialiser(SUD);
-        Afficher(NORD, SUD, TOUR);
-        while (!FonctionsJoueur.fini(TOUR, NORD, SUD)) {
-            TOUR = FonctionsJoueur.jouer(TOUR, NORD, SUD);
-            Afficher(NORD, SUD, TOUR);
+        Afficher(NORD, SUD);
+        while (!FonctionsJoueur.fini(NORD)) {
+            if(NORD.getTour()%2==0){
+                FonctionsJoueur.jouer(NORD, SUD);
+            }else {
+                FonctionsJoueur.jouer(SUD, NORD);
+            }
+            Afficher(NORD, SUD);
         }
     }
 }
-
