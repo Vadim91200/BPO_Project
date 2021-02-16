@@ -48,4 +48,3 @@ public class Joueur {
     public int getTour(){ return Tour;}
     public void ChangementTour(){ Tour++;}
 }
-
