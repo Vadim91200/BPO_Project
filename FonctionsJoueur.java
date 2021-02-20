@@ -1,25 +1,44 @@
-package appli;
-
 import java.util.Scanner;
 public class FonctionsJoueur {
-    public static boolean fini(Joueur j) {
-        return perdu(j) || gagne(j);
+    public static boolean fini(Joueur j,Joueur j2) {
+    	if(j.getTour()%2==0)
+    		return perdu(j) || gagne(j);
+    	else {
+    		return perdu(j2) || gagne(j2);
+    	}
     }
 
     public static boolean perdu(Joueur j) {
-        return j.getMain().size()<2;
+    	int c=0,k=0;
+    	if(j.getMain().size()<2) {
+    		return true;
+    	}
+    	else{
+    		for(int i=0;i<j.getMain().size();i++) {
+    		if(j.getMain().get(i)< j.getAscendant()) {
+    			c++;
+    		}
+    		else if(j.getMain().get(i)>j.getDescendant()) {
+    			k++;
+    		}
+    	}
+    	if(c==j.getMain().size() || k==j.getMain().size()) {
+    		return true;
+    	}
     }
+		return false;
+}
 
     public static boolean gagne(Joueur j) {
-        if (perdu(j))
-            return false;
-        if (j.getMain().size()>0)
-            return false;
-        return true;
+    	 if (perdu(j))
+             return false;
+         if (j.getMain().size()>0)
+             return false;
+         return true;
     }
 
     public static void jouer(Joueur j1, Joueur j2) {
-        if (fini(j1)) {
+        if (fini(j1,j2)) {
             if (j1.getTour()%2==0) {
                  System.out.println("partie finie, SUD a gagne");
             } else {
@@ -45,10 +64,12 @@ public class FonctionsJoueur {
                         c++;
                     }else{
                         g++;
+                        c=0;
                     }
                 }
                 if (g==1){
                     Remplissage(j1, s, c);
+                    g=0;
                     break;
                 }
                 System.out.print("#");
@@ -75,7 +96,7 @@ public class FonctionsJoueur {
             }
             System.out.println(c + " cartes posées, " + i + " cartes piochées ");
 
-        } else if (s.contains("^")) {
+        } else {
             j1.remplirMain(2);
             System.out.println(c + " cartes posées, 2 cartes piochées ");
         }
