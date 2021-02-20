@@ -1,7 +1,6 @@
 package appli;
 
 import java.util.Scanner;
-import java.util.NoSuchElementException;
 public class FonctionsJoueur {
     public static boolean fini(Joueur j) {
         return perdu(j) || gagne(j);
