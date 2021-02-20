@@ -36,9 +36,11 @@ public class FonctionsJoueur {
                 String s = sc.nextLine();
                 Scanner k = new Scanner(s);
                 while (k.hasNext()) {
+                    g=1;
                     x = k.next();
-                    try { String u = k.next(); }
-                    catch(NoSuchElementException nfe){ isValid = false; }
+                    if(!k.hasNext()&& c==0){
+                        isValid = false;
+                    }
                     if (EstValide(x, j1,j2) == true && isValid == true) {
                         Ajouter(x, j1, j2);
                         c++;
@@ -46,13 +48,14 @@ public class FonctionsJoueur {
                         g++;
                     }
                 }
-                if (g==0 && isValid == false){
+                if (g==1){
                     Remplissage(j1, s, c);
                     break;
                 }
                 System.out.print("#");
                 g=0;
-                }while (EstValide(x, j1,j2) == false && isValid == true);
+                isValid = true;
+                }while (true);
             j1.ChangementTour();
         }
     }
