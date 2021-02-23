@@ -1,20 +1,21 @@
-
+package appli;
 
 import java.util.Random;
 
 public class Application {
-    public static void Afficher(Joueur NORD, Joueur SUD) {
-        System.out.println("NORD ^["+String.format("%02d", NORD.getAscendant()) +"] v[" +String.format("%02d",NORD.getDescendant())+ "] (m"+NORD.getMain().size()+"p"+NORD.getPcarte().getElement().size()+")");
-        System.out.println("SUD ^["+String.format("%02d", SUD.getAscendant()) +"] v[" +String.format("%02d",SUD.getDescendant())+ "] (m"+SUD.getMain().size()+"p"+SUD.getPcarte().getElement().size()+")");
-        if(NORD.getTour()%2==0){
+    public static void Afficher(Jeu theGame) {
+        System.out.println("NORD ^["+String.format("%02d", theGame.getNORD().getAscendant()) +"] v[" +String.format("%02d", theGame.getNORD().getDescendant())+ "] (m"+theGame.getNORD().getMain().size()+"p"+theGame.getNORD().getPcarte().getElement().size()+")");
+        System.out.println("SUD ^["+String.format("%02d", theGame.getSUD().getAscendant()) +"] v[" +String.format("%02d", theGame.getSUD().getDescendant())+ "] (m"+theGame.getSUD().getMain().size()+"p"+theGame.getSUD().getPcarte().getElement().size()+")");
+
+        if(theGame.getTour()%2==0){
             System.out.print("cartes NORD { ");
-            for(int i : NORD.getMain()){
+            for(int i : theGame.getNORD().getMain()){
                 System.out.print(String.format("%02d", i)+" ");
             }
             System.out.println("}");
         }else{
             System.out.print("cartes SUD { ");
-            for(int i : SUD.getMain()){
+            for(int i : theGame.getSUD().getMain()){
                 System.out.print(String.format("%02d", i)+" ");
             }
             System.out.println("}");
@@ -22,16 +23,11 @@ public class Application {
     }
 
     public static void main(String[] args){
-        Joueur NORD = new Joueur();
-        Joueur SUD = new Joueur();
-        Afficher(NORD, SUD);
-        while (!FonctionsJoueur.fini(NORD,SUD)) {
-            if(NORD.getTour()%2==0){
-                FonctionsJoueur.jouer(NORD, SUD);
-            }else {
-                FonctionsJoueur.jouer(SUD, NORD);
-            }
-            Afficher(NORD, SUD);
+        Jeu theGame = new Jeu();
+        Afficher(theGame);
+        while (!FonctionsJoueur.fini(theGame)) {
+            FonctionsJoueur.jouer(theGame);
+            Afficher(theGame);
         }
     }
 }
