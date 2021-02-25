@@ -29,5 +29,10 @@ public class Application {
             FonctionsJoueur.jouer(theGame);
             Afficher(theGame);
         }
+        if (theGame.joueurCourant() == theGame.getNORD()) {
+            System.out.println("partie finie, SUD a gagne");
+        } else {
+            System.out.println("partie finie, NORD a gagne");
+        }
     }
 }
