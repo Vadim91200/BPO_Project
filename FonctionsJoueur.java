@@ -4,78 +4,81 @@ import java.util.Scanner;
 
 public class FonctionsJoueur {
     public static boolean fini(Jeu theGame) {
-        if (theGame.getTour() % 2 == 0)
-            return perdu(theGame.getNORD()) || gagne(theGame.getNORD());
-        else {
-            return perdu(theGame.getSUD()) || gagne(theGame.getSUD());
-        }
+        return perdu(theGame) || gagne(theGame);
     }
 
-    public static boolean perdu(Joueur j) {
+    public static boolean perdu(Jeu theGame) {
         int c = 0, k = 0;
-        if (j.getMain().size() < 2) {
+        if (theGame.joueurCourant().getMain().size() < 2) {
             return true;
         } else {
-            for (int i = 0; i < j.getMain().size(); i++) {
-                if (j.getMain().get(i) < j.getAscendant()) {
+            for (int i = 0; i < theGame.joueurCourant().getMain().size(); i++) {
+                if (theGame.joueurCourant().getMain().get(i) < theGame.joueurCourant().getAscendant()) {
                     c++;
-                } else if (j.getMain().get(i) > j.getDescendant()) {
+                }
+                if (theGame.joueurCourant().getMain().get(i) > theGame.joueurCourant().getDescendant()) {
                     k++;
                 }
             }
-            if (c == j.getMain().size() || k == j.getMain().size()) {
+            if (c == theGame.joueurCourant().getMain().size() && k == theGame.joueurCourant().getMain().size()) {
+                for (int i = 0; i < theGame.joueurCourant().getMain().size(); i++) {
+                    if (theGame.joueurCourant().getMain().get(i) > theGame.joueurEnattente().getAscendant()) {
+                        c++;
+                    }
+                    if (theGame.joueurCourant().getMain().get(i) < theGame.joueurEnattente().getDescendant()) {
+                        k++;
+                    }
+                }
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean gagne(Joueur j) {
-        if (perdu(j))
+    public static boolean gagne(Jeu theGame) {
+        if (perdu(theGame))
             return false;
-        if (j.getMain().size() > 0)
+        if (theGame.joueurCourant().getMain().size() > 0)
             return false;
         return true;
     }
 
     public static void jouer(Jeu theGame) {
-        if (fini(theGame)) {
-            if (theGame.joueurCourant() == theGame.getNORD()) {
-                System.out.println("partie finie, SUD a gagne");
-            } else {
-                System.out.println("partie finie, NORD a gagne");
+        int c = 0, g = 0;
+        Scanner sc = new Scanner(System.in);
+        String s;
+        System.out.print("> ");
+        s = sc.nextLine();
+        while (true) {
+            String[] tab = s.split("\\s+");
+            for (String mot : tab) {
+                if (mot.contains("'")) {
+                    g++;
+                }
+                if (estValide(mot, theGame.joueurCourant(), theGame.joueurEnattente())) {
+                    c++;
+                    ajoutTemporaire(mot, theGame.joueurCourant(), theGame.joueurEnattente());
+                }
             }
-        } else {
-            int c = 0, g = 0;
-            Scanner sc = new Scanner(System.in);
-            String s;
-            System.out.print("> ");
-            s = sc.nextLine();
-            while (true) {
-                String[] tab = s.split("\\s+");
+            if (c == tab.length && tab.length != 1 && g <= 1) {
                 for (String mot : tab) {
-                    if (mot.contains("'")) {
-                        g++;
-                    }
-                    if (estValide(mot, theGame.joueurCourant(), theGame.joueurEnattente())){
-                        c++;
-                        ajoutTemporaire(mot, theGame.joueurCourant(), theGame.joueurEnattente());
-                    }
+                    ajouter(mot, theGame.joueurCourant(), theGame.joueurEnattente());
                 }
-                if (c == tab.length && tab.length != 1 && g <= 1) {
-                    remplissage(theGame.joueurCourant(), s, c);
-                    for (String mot : tab) {
-                        ajouter(mot, theGame.joueurCourant(), theGame.joueurEnattente());
-                    }
-                    ajoutTemporaire(Integer.toString(theGame.joueurCourant().getAscendant())+"^", theGame.joueurCourant(), theGame.joueurEnattente());
-                    ajoutTemporaire(Integer.toString(theGame.joueurCourant().getDescendant())+"v", theGame.joueurCourant(), theGame.joueurEnattente());
-                    break;
-                }
-                System.out.print("#> ");
-                s = sc.nextLine();
+                remplissage(theGame.joueurCourant(), s, c);
+                ajoutTemporaire(Integer.toString(theGame.joueurCourant().getAscendant()) + "^", theGame.joueurCourant(), theGame.joueurEnattente());
+                ajoutTemporaire(Integer.toString(theGame.joueurCourant().getDescendant()) + "v", theGame.joueurCourant(), theGame.joueurEnattente());
+                break;
             }
-            theGame.changementTour();
+            ajoutTemporaire(Integer.toString(theGame.joueurCourant().getAscendant()) + "^", theGame.joueurCourant(), theGame.joueurEnattente());
+            ajoutTemporaire(Integer.toString(theGame.joueurCourant().getDescendant()) + "v", theGame.joueurCourant(), theGame.joueurEnattente());
+            ajoutTemporaire(Integer.toString(theGame.joueurEnattente().getAscendant()) + "^", theGame.joueurEnattente(), theGame.joueurCourant());
+            ajoutTemporaire(Integer.toString(theGame.joueurEnattente().getDescendant()) + "v", theGame.joueurEnattente(), theGame.joueurCourant());
+            c = 0;
+            g = 0;
+            System.out.print("#> ");
+            s = sc.nextLine();
         }
+        theGame.changementTour();
     }
 
     private static void remplissage(Joueur j1, String s, int c) {
@@ -94,7 +97,7 @@ public class FonctionsJoueur {
             }
             System.out.println(c + " cartes posées, " + i + " cartes piochées ");
 
-        } else if (s.contains("^")) {
+        } else {
             j1.remplirMain(2);
             System.out.println(c + " cartes posées, 2 cartes piochées ");
         }
@@ -163,10 +166,11 @@ public class FonctionsJoueur {
             j1.getMain().remove((Integer) Integer.parseInt(k));
         }
     }
-    public static void ajoutTemporaire(String s, Joueur j1, Joueur j2){
+
+    public static void ajoutTemporaire(String s, Joueur j1, Joueur j2) {
         assert (estValide(s, j1, j2));
-        if(s.length()==2){
-            s = 0 +s;
+        if (s.length() == 2) {
+            s = 0 + s;
         }
         String k = s.substring(0, 2);
         if (s.contains("'")) {
